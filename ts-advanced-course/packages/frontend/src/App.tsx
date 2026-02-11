@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { User } from "@course/shared";
+import { type User, isUser } from "@course/shared";
 
 function App() {
     const [user, setUser] = useState<User | null>(null);
@@ -7,8 +7,12 @@ function App() {
     useEffect(() => {
         fetch("http://localhost:3000/user")
             .then((res) => res.json())
-            .then((data: User) => {
-                setUser(data);
+            .then((data: unknown) => {
+                if (isUser(data)) {
+                    setUser(data);
+                } else {
+                    console.error("Invalid user data");
+                }
             });
     }, []);
 
